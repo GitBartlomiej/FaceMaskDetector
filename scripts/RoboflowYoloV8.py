@@ -1,28 +1,36 @@
 import os
+import cv2
 from roboflow import Roboflow
-rf = Roboflow(api_key="JxCMjosaIa8gVEhzGMq6")
+import supervision as sv
+
+# Set up your Roboflow model
+api_key = "JxCMjosaIa8gVEhzGMq6"
+rf = Roboflow(api_key=api_key)
 project = rf.workspace().project("mask-aify8")
 model = project.version(3).model
 
+# Directory containing images
+image_dir = "/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/face-masks/scripts/dataset/train/with_mask/"
 
-path=os.getcwd()
-path=os.path.join(path, 'dataset')
+# Iterate over each image in the directory
+for filename in os.listdir(image_dir):
+    if filename.endswith(".jpeg") or filename.endswith(".jpg") or filename.endswith(".png"):
+        image_path = os.path.join(image_dir, filename)
 
-# declare train_path
-path_train = os.path.join(path, 'train')
+        # Predict using the model
+        result = model.predict(image_path, confidence=40, overlap=30).json()
 
-# declare test_path
-path_test = os.path.join(path, 'test')
+        labels = [item["class"] for item in result["predictions"]]
+        detections = sv.Detections.from_roboflow(result)
 
-# Ścieżka do folderu ze zdjęciami oryginalnymi
-original_images_path = path_train
+        label_annotator = sv.LabelAnnotator()
+        bounding_box_annotator = sv.BoxAnnotator()
 
-image_path = "/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/face-masks/scripts/dataset/train/with_mask/0_0_0.jpeg"
+        image = cv2.imread(image_path)
 
-# infer on a local image
-print(model.predict(
-    image_path,
-    confidence=40, overlap=30).json())
+        annotated_image = bounding_box_annotator.annotate(scene=image, detections=detections)
+        annotated_image = label_annotator.annotate(scene=annotated_image, detections=detections, labels=labels)
 
-# visualize your prediction
-model.predict(image_path, confidence=40, overlap=30).save("prediction.jpg")
+        sv.plot_image(image=annotated_image, size=(16, 16))
+    else:
+        continue
