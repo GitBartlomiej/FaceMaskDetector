@@ -3,54 +3,54 @@ import numpy as np
 from keras_preprocessing.image import load_img, img_to_array
 from keras.preprocessing.image import ImageDataGenerator
 
-# Ścieżka do folderu z klatkami
-input_folder = 'klatki_filmu'
+# Path to the folder with frames
+input_folder = 'movie_frames'
 
-# Tworzenie folderów dla obróconych obrazów
-output_folder = 'obrocone_obrazy'
+# Creating folders for rotated images
+output_folder = 'rotated_images'
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
-for i in range(11):  # Od 0 do 10 stopni
-    os.makedirs(os.path.join(output_folder, f"{i}_stopien"), exist_ok=True)
+for i in range(11):  # From 0 to 10 degrees
+    os.makedirs(os.path.join(output_folder, f"{i}_degree"), exist_ok=True)
 
-# Tworzenie folderu dla zoomu
+# Creating a folder for zoom
 zoom_folder = 'zoom'
 os.makedirs(zoom_folder, exist_ok=True)
 
-# Wczytywanie i przetwarzanie klatek
+# Loading and processing frames
 for filename in os.listdir(input_folder):
     if filename.endswith('.png'):
         img_path = os.path.join(input_folder, filename)
-        img = load_img(img_path)  # Wczytanie obrazu
-        x = img_to_array(img)  # Konwersja do tablicy numpy
-        x = np.expand_dims(x, axis=0)  # Zmiana kształtu do (1, wysokość, szerokość, kanały)
+        img = load_img(img_path)  # Loading the image
+        x = img_to_array(img)  # Converting to a numpy array
+        x = np.expand_dims(x, axis=0)  # Reshaping to (1, height, width, channels)
 
-        # Aplikacja rotacji i zapisanie obrazów
-        for i in range(11):  # Od 0 do 10 stopni
-            # Inicjalizacja generatora z rotacją
+        # Applying rotation and saving images
+        for i in range(11):  # From 0 to 10 degrees
+            # Initializing the generator with rotation
             datagen = ImageDataGenerator(rotation_range=i)
-            # Utworzenie iteratora z opcjami zapisu
-            iterator = datagen.flow(x, batch_size=1, save_to_dir=os.path.join(output_folder, f"{i}_stopien"),
-                                    save_prefix=f"{i}_stopien_", save_format='png')
-            iterator.next()  # Generowanie i zapisywanie obrazu
+            # Creating an iterator with save options
+            iterator = datagen.flow(x, batch_size=1, save_to_dir=os.path.join(output_folder, f"{i}_degree"),
+                                    save_prefix=f"{i}_degree_", save_format='png')
+            iterator.next()  # Generating and saving the image
 
-# Aplikacja zoomu i zapisanie obrazów
-zoom_factors = [0.5, 0.75, 1.0, 1.25, 1.5]  # Przykładowe wartości zoomu
+# Applying zoom and saving images
+zoom_factors = [0.5, 0.75, 1.0, 1.25, 1.5]  # Example zoom values
 for zoom in zoom_factors:
-    # Inicjalizacja generatora z zoomem
+    # Initializing the generator with zoom
     datagen = ImageDataGenerator(zoom_range=[zoom, zoom])
 
     for filename in os.listdir(input_folder):
         if filename.endswith('.png'):
             img_path = os.path.join(input_folder, filename)
-            img = load_img(img_path)  # Wczytanie obrazu
-            x = img_to_array(img)  # Konwersja do tablicy numpy
-            x = np.expand_dims(x, axis=0)  # Zmiana kształtu do (1, wysokość, szerokość, kanały)
+            img = load_img(img_path)  # Loading the image
+            x = img_to_array(img)  # Converting to a numpy array
+            x = np.expand_dims(x, axis=0)  # Reshaping to (1, height, width, channels)
 
-            # Utworzenie iteratora z opcjami zapisu
+            # Creating an iterator with save options
             iterator = datagen.flow(x, batch_size=1, save_to_dir=zoom_folder,
                                     save_prefix=f'zoom_{zoom}_', save_format='png')
-            iterator.next()  # Generowanie i zapisywanie obrazu
+            iterator.next()  # Generating and saving the image
 
-print("Zakończono przetwarzanie obrazów.")
+print("Finished processing images.")
