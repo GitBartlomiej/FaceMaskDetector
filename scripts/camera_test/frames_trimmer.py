@@ -5,7 +5,7 @@ import os
 input_video = 'output.avi'
 
 # Utworzenie nowego folderu na zdjęcia
-output_folder = 'klatki_filmu'
+output_folder = 'movie_frames'
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
