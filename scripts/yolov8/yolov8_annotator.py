@@ -3,6 +3,7 @@ import numpy as np
 from ultralytics import YOLO
 import os
 
+
 def write_annotation(file_path, box, image_width, image_height):
     x1, y1, x2, y2 = map(float, box.xyxy[0].tolist())
     class_id = box.cls[0].item()
@@ -18,6 +19,7 @@ def write_annotation(file_path, box, image_width, image_height):
     with open(file_path, 'w') as f:
         f.write(f"{class_id} {x_center_n} {y_center_n} {width_n} {height_n}\n")
 
+
 def is_image_in_dataset(image_name, dataset_dir):
     """Sprawdza, czy obraz jest już w zestawie treningowym"""
     for split in ['train', 'valid', 'test']:
@@ -27,7 +29,7 @@ def is_image_in_dataset(image_name, dataset_dir):
 
 
 # Load your YOLO model with custom or pre-trained weights
-model = YOLO('runs/detect/train/weights/best.pt')
+model = YOLO('runs/detect/train2/weights/best.pt')
 
 input_image_dir = '/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/Datasets/with_mask'
 base_dataset_dir = './dataset'
@@ -36,6 +38,8 @@ base_dataset_dir = './dataset'
 for split in ['train', 'valid', 'test', 'not_detected']:
     os.makedirs(os.path.join(base_dataset_dir, split, 'images'), exist_ok=True)
     os.makedirs(os.path.join(base_dataset_dir, split, 'labels'), exist_ok=True)
+
+os.makedirs(os.path.join(base_dataset_dir, 'not_detected', 'not_detected_images'), exist_ok=True)
 
 images = os.listdir(input_image_dir)
 
@@ -52,8 +56,6 @@ for image_name in images:
     image_height, image_width = image.shape[:2]
 
     results = model.predict(image)
-
-
 
     # Show only the first detected box, if any
     if len(results[0].boxes) > 0:
@@ -86,10 +88,7 @@ for image_name in images:
         cv2.destroyAllWindows()
     else:
         # If no box is detected, save to not_detected
-        not_detected_image_path = os.path.join(base_dataset_dir, 'not_detected', 'images', image_name)
+        not_detected_image_path = os.path.join(base_dataset_dir, 'not_detected', 'not_detected_images', image_name)
         cv2.imwrite(not_detected_image_path, image)
 
 print('Process completed.')
-
-
-
