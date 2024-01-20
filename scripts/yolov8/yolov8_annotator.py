@@ -4,7 +4,7 @@ from ultralytics import YOLO
 import os
 
 # Load your YOLO model with custom or pre-trained weights
-model = YOLO('./runs/detect/train/weights/best.pt')
+model = YOLO('runs1/detect/train/weights/best.pt')
 
 # Directory where the images are located for annotation
 image_dir = '/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/Datasets/with_mask_small/'
