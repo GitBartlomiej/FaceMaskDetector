@@ -12,11 +12,11 @@ main_output_folder = 'metamorphic_transforms'
 os.makedirs(main_output_folder, exist_ok=True)
 
 # Transformation parameters
-rotation_range = range(0, 11)  # Degrees
-zoom_range = [0.5, 0.75, 1.0, 1.25, 1.5]  # Zoom factors
-illumination_changes = [20, 40, 60, 80, 100]  # Brightness changes
+rotation_range = range(0, 45, 5)  # Degrees
+zoom_range = [1.0, 1.25, 1.5, 2.0, 2.5, 3.0]  # Zoom factors
+illumination_changes = [20, 40, 60, 80, 100, 120]  # Brightness changes
 movement_offsets = range(0, 21, 5)  # Pixel offsets for movement
-blurring_kernels = [3, 5, 7]
+blurring_kernels = [3, 5, 7, 9, 11, 13]  # Kernel sizes for blurring
 scaling_factors = [0.5, 0.75, 1.0, 1.25, 1.5]  # Scaling factors
 
 # Create subfolders for each transformation parameter
@@ -53,14 +53,14 @@ for filename in os.listdir(input_folder):
         for i in rotation_range:
             datagen = ImageDataGenerator(rotation_range=i)
             iterator = datagen.flow(x, batch_size=1, save_to_dir=os.path.join(main_output_folder, f'rotation_{i}_degree'),
-                                    save_prefix=f'rotation_{i}_degree_', save_format='png')
+                                    save_prefix=f'rotation_{i}_degree_{filename}', save_format='png')
             iterator.next()
 
         # Apply zoom
         for zoom in zoom_range:
             datagen = ImageDataGenerator(zoom_range=[zoom, zoom])
             iterator = datagen.flow(x, batch_size=1, save_to_dir=os.path.join(main_output_folder, f'zoom_{zoom}'),
-                                    save_prefix=f'zoom_{zoom}_', save_format='png')
+                                    save_prefix=f'zoom_{zoom}_{filename}', save_format='png')
             iterator.next()
 
         # Apply illumination change
@@ -85,6 +85,5 @@ for filename in os.listdir(input_folder):
             scaled_img = cv2.resize(original_img, None, fx=scale, fy=scale)
             cv2.imwrite(os.path.join(main_output_folder, f'scaling_{scale}', f'scaling_{scale}_{filename}'), scaled_img)
 
-        # Add other transformations as needed...
 
 print("Finished processing images.")
