@@ -28,7 +28,6 @@ def check_and_modify_files(base_dir):
                         file.writelines(lines)
                     print(f"Modified: {filepath}")
 
-# Replace 'your_base_directory' with the actual base directory you want to search.
 base_directory = '/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/face-masks/scripts/yolov8/dataset/'
 # check_and_delete_files(base_directory)
 check_and_modify_files(base_directory)

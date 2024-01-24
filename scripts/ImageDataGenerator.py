@@ -2,7 +2,6 @@ import os
 
 from keras.preprocessing.image import ImageDataGenerator
 
-# Tworzenie instancji ImageDataGenerator z opcjami augmentacji
 datagen = ImageDataGenerator(
     rotation_range=40,
     width_shift_range=0.2,
@@ -18,16 +17,12 @@ datagen = ImageDataGenerator(
 path=os.getcwd()
 path=os.path.join(path, 'dataset')
 
-# declare train_path
 path_train = os.path.join(path, 'train')
 
-# declare test_path
 path_test = os.path.join(path, 'test')
 
-# Ścieżka do folderu ze zdjęciami oryginalnymi
 original_images_path = path_train
 
-# Ścieżka, gdzie będą zapisane przerobione zdjęcia
 save_to_dir_path = '/home/bartlomiej/Studia/Sem4/Przetwarzanie Obrazów/Datasets/Augmented/'
 
 # Przygotowanie przepływu danych i wskazanie, gdzie zapisać przerobione obrazy

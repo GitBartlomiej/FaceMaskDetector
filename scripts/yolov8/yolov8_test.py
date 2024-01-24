@@ -2,10 +2,8 @@ import cv2
 from ultralytics import YOLO
 import os
 
-# Load the YOLO model
 model = YOLO('runs/detect/train3/weights/best.pt')
 
-# Directory where the images are located
 source_dir = '/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/face-masks/scripts/dataset/test/with_mask'
 
 # # Directory where the images with detections will be saved

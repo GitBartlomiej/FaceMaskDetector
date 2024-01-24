@@ -4,20 +4,17 @@ import cv2
 from keras_preprocessing.image import load_img, img_to_array
 from keras.preprocessing.image import ImageDataGenerator
 
-# Path to the folder with frames
 input_folder = 'movie_frames'
 
-# Main folder for all metamorphic transformations
 main_output_folder = 'metamorphic_transforms'
 os.makedirs(main_output_folder, exist_ok=True)
 
-# Transformation parameters
-rotation_range = range(0, 45, 5)  # Degrees
-zoom_range = [1.0, 1.25, 1.5, 2.0, 2.5, 3.0]  # Zoom factors
-illumination_changes = [20, 40, 60, 80, 100, 120]  # Brightness changes
-movement_offsets = range(0, 21, 5)  # Pixel offsets for movement
-blurring_kernels = [3, 5, 7, 9, 11, 13]  # Kernel sizes for blurring
-scaling_factors = [0.5, 0.75, 1.0, 1.25, 1.5]  # Scaling factors
+rotation_range = range(0, 45, 5)
+zoom_range = [1.0, 1.25, 1.5, 2.0, 2.5, 3.0]
+illumination_changes = [20, 40, 60, 80, 100, 120]
+movement_offsets = range(0, 21, 5)
+blurring_kernels = [3, 5, 7, 9, 11, 13]
+scaling_factors = [0.5, 0.75, 1.0, 1.25, 1.5]
 
 # Create subfolders for each transformation parameter
 for param in rotation_range:
@@ -38,13 +35,12 @@ for param in blurring_kernels:
 for param in scaling_factors:
     os.makedirs(os.path.join(main_output_folder, f'scaling_{param}'), exist_ok=True)
 
-# Loading and processing frames
 for filename in os.listdir(input_folder):
     if filename.endswith('.png'):
         img_path = os.path.join(input_folder, filename)
-        img = load_img(img_path)  # Loading the image
-        x = img_to_array(img)  # Converting to a numpy array
-        x = np.expand_dims(x, axis=0)  # Reshaping to (1, height, width, channels)
+        img = load_img(img_path)
+        x = img_to_array(img)
+        x = np.expand_dims(x, axis=0)
 
         # Load original image using OpenCV for other transformations
         original_img = cv2.imread(img_path)

@@ -9,15 +9,12 @@ rf = Roboflow(api_key=api_key)
 project = rf.workspace().project("mask-aify8")
 model = project.version(3).imagenet_model
 
-# Directory containing images
 image_dir = "/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/face-masks/scripts/dataset/train/with_mask/"
 
-# Iterate over each image in the directory
 for filename in os.listdir(image_dir):
     if filename.endswith(".jpeg") or filename.endswith(".jpg") or filename.endswith(".png"):
         image_path = os.path.join(image_dir, filename)
 
-        # Predict using the model
         result = model.predict(image_path, confidence=40, overlap=30).json()
 
         labels = [item["class"] for item in result["predictions"]]

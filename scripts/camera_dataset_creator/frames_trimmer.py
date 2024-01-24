@@ -28,7 +28,6 @@ while True:
     frame_number += 1
 
 
-# Zwolnienie obiektu cap i zamknięcie wszystkich okien
 cap.release()
 cv2.destroyAllWindows()
 

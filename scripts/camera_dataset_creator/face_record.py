@@ -16,10 +16,8 @@ def create_folders(base_folder, subfolders):
     for folder in subfolders:
         os.makedirs(os.path.join(base_folder, folder), exist_ok=True)
 
-# Inicjalizacja detektora twarzy
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-# Inicjalizacja kamery
 cap = cv2.VideoCapture(2)
 
 # Tworzenie folderów do zapisu zdjęć
@@ -41,7 +39,6 @@ while True:
     if len(faces) > 0:
         print("Wykryto twarz!")
 
-    # Podziel okno na cztery części
     height, width = frame.shape[:2]
     regions = {
         "top_left": (0, 0, width // 2, height // 2),
@@ -50,23 +47,18 @@ while True:
         "bottom_right": (width // 2, height // 2, width // 2, height // 2)
     }
 
-    # Rysowanie linii pionowej i poziomej na środku obrazu
     cv2.line(frame, (width // 2, 0), (width // 2, height), (255, 0, 0), 2)  # Niebieska linia pionowa
     cv2.line(frame, (0, height // 2), (width, height // 2), (255, 0, 0), 2)  # Niebieska linia pozioma
 
-    # Zapisz zdjęcie twarzy w odpowiednim folderze
     for face in faces:
         for region_name, region in regions.items():
             if is_face_in_region(face, region):
                 save_face(face, frame, os.path.join(base_folder, region_name))
 
-    # Wyświetl obraz
     cv2.imshow('Frame with Lines', frame)
 
-    # Wyjdź po naciśnięciu 'q'
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# Zwolnienie uchwytu kamery i zamknięcie okien
 cap.release()
 cv2.destroyAllWindows()
