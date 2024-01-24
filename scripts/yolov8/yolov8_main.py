@@ -6,16 +6,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 class Yolov8ImageDetector:
-    def __init__(self):
-        self.model_weights = ('/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/face-masks/scripts/yolov8/runs/detect/'
-                              'train3/weights/best.pt')
-        self.model = YOLO(self.model_weights)
-        self.base_source_dir = ('/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/face-masks/scripts/'
-                                'metamorphic_transformed_dataset')
-        self.base_output_dir = ('/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/face-masks/scripts/'
-                                'metamorphic_test_detection/yolov8')
+    def __init__(self, model_path, base_source_dir, base_output_dir):
+        self.model = YOLO(model_path)
+        self.base_source_dir = base_source_dir
+        self.base_output_dir = base_output_dir
+
         os.makedirs(self.base_output_dir, exist_ok=True)
-        self.subdirectories = [d for d in os.listdir(self.base_source_dir) if os.path.isdir(os.path.join(self.base_source_dir, d))]
+        self.subdirectories = [d for d in os.listdir(self.base_source_dir) if
+                               os.path.isdir(os.path.join(self.base_source_dir, d))]
         for subdir in self.subdirectories:
             os.makedirs(os.path.join(self.base_output_dir, subdir), exist_ok=True)
 
