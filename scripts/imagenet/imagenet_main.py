@@ -32,19 +32,17 @@ from tensorflow.keras.applications.inception_v3 import preprocess_input
 
 
 class ImageNetImageDetector:
-    def __init__(self):
-        self.model = load_model('/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/face-masks/scripts/nn_models/'
-                                'imagenet.h5')
-        self.base_source_dir = ('/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/face-masks/scripts/'
-                                'metamorphic_transformed_dataset')
-        self.base_output_dir = ('/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/face-masks/scripts/'
-                                'metamorphic_test_detection/imagenet')
+    def __init__(self, model_path, base_source_dir, base_output_dir):
+        self.model = load_model(model_path)
+        self.base_source_dir = base_source_dir
+        self.base_output_dir = base_output_dir
 
         os.makedirs(self.base_output_dir, exist_ok=True)
         self.subdirectories = [d for d in os.listdir(self.base_source_dir) if
                                os.path.isdir(os.path.join(self.base_source_dir, d))]
         for subdir in self.subdirectories:
             os.makedirs(os.path.join(self.base_output_dir, subdir), exist_ok=True)
+
 
     @staticmethod
     def preprocess_image(img_path):
@@ -125,7 +123,7 @@ class ImageNetImageDetector:
             print("No data available for plotting.")
 
 
-# Usage example
-detector = ImageNetImageDetector()
-detection_results = detector.run_detection()
-detector.plot_results(detection_results)
+# # Usage example
+# detector = ImageNetImageDetector()
+# detection_results = detector.run_detection()
+# detector.plot_results(detection_results)
