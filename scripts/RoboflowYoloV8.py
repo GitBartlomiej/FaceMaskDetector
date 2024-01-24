@@ -7,7 +7,7 @@ import supervision as sv
 api_key = "JxCMjosaIa8gVEhzGMq6"
 rf = Roboflow(api_key=api_key)
 project = rf.workspace().project("mask-aify8")
-model = project.version(3).model
+model = project.version(3).imagenet_model
 
 # Directory containing images
 image_dir = "/home/bartlomiej/Studia/Sem4/Przetwarzanie_Obrazów/face-masks/scripts/dataset/train/with_mask/"
