@@ -1,4 +1,7 @@
 import os
+
+from PIL import UnidentifiedImageError
+
 os.environ['CUDA_VISIBLE_DEVICES'] = ''
 import tensorflow as tf
  # Używa tylko jednego, określonego GPU
@@ -46,11 +49,15 @@ class ImageNetImageDetector:
 
     @staticmethod
     def preprocess_image(img_path):
-        img = image.load_img(img_path, target_size=(224, 224))
-        img_array = image.img_to_array(img)
-        img_array = np.expand_dims(img_array, axis=0)
-        img_array = preprocess_input(img_array)
-        return img_array
+        try:
+            img = image.load_img(img_path, target_size=(224, 224))
+            img_array = image.img_to_array(img)
+            img_array = np.expand_dims(img_array, axis=0)
+            img_array = preprocess_input(img_array)
+            return img_array
+        except UnidentifiedImageError:
+            print(f"Nie można zidentyfikować obrazu: {img_path}. Obraz może być uszkodzony.")
+            return None
 
     def process_images(self, subdir):
         source_dir = os.path.join(self.base_source_dir, subdir)
@@ -83,7 +90,6 @@ class ImageNetImageDetector:
 
                 results_list.append({'Folder': subdir, 'Image': image_name, 'Detected': detected})
 
-
         return results_list
 
     # def run_detection(self):
@@ -99,6 +105,7 @@ class ImageNetImageDetector:
         for subdir in self.subdirectories:
             results = self.process_images(subdir)
             all_results.extend(results)
+        self.plot_results(all_results)
         return all_results
 
     def plot_results(self, detection_results):
@@ -106,24 +113,23 @@ class ImageNetImageDetector:
         if not detection_log_df.empty:
             plt.figure(figsize=(15, 6))
 
-            # Grupowanie wyników według folderów i liczenie wykryć oraz niewykryć
             detection_summary = detection_log_df.groupby(['Folder', 'Detected']).size().unstack(fill_value=0)
 
-            # Tworzenie wykresu słupkowego z dwoma słupkami dla każdego folderu
-            detection_summary.plot(kind='bar', stacked=False)
+            ax = detection_summary.plot(kind='bar', stacked=False)
             plt.title('Liczba wykrytych i niewykrytych masek w każdym folderze')
             plt.xlabel('Folder')
             plt.ylabel('Liczba obrazów')
-            plt.xticks(rotation=45)  # Obrót etykiet osi X dla lepszej czytelności
 
-            # Zapisywanie wykresu
+            plt.xticks(rotation=90, ha='center')  # Ha to horizontal alignment
+            plt.tight_layout()  # Dostosowanie layoutu, aby pomieścić etykiety
+
             plt.savefig(os.path.join(self.base_output_dir, 'detection_results_summary.png'))
             plt.close()
         else:
             print("No data available for plotting.")
 
 
-# # Usage example
+# # # Usage example
 # detector = ImageNetImageDetector()
 # detection_results = detector.run_detection()
 # detector.plot_results(detection_results)

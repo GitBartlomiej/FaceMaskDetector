@@ -50,6 +50,7 @@ class Yolov8ImageDetector:
             futures = [executor.submit(self.process_images, subdir) for subdir in self.subdirectories]
             for future in concurrent.futures.as_completed(futures):
                 all_results.extend(future.result())
+        self.plot_results(all_results)
         return all_results
 
     def plot_results(self, detection_results):

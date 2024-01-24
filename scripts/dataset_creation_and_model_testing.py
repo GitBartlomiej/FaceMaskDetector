@@ -45,5 +45,5 @@ imagenet_output_dir = './metamorphic_test_detection/imagenet'
 yolov8_model = Yolov8ImageDetector(yolov8_weights_path, yolov8_source_dir, yolov8_output_dir)
 imagenet_model = ImageNetImageDetector(imagenet_model_path, imagenet_source_dir, imagenet_output_dir)
 
-yolov8_model.run_detection()
+# yolov8_model.run_detection()
 imagenet_model.run_detection()
