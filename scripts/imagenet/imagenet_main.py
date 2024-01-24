@@ -106,18 +106,24 @@ class ImageNetImageDetector:
     def plot_results(self, detection_results):
         detection_log_df = pd.DataFrame(detection_results)
         if not detection_log_df.empty:
-            for folder in detection_log_df['Folder'].unique():
-                folder_df = detection_log_df[detection_log_df['Folder'] == folder]
-                detection_counts = folder_df['Detected'].value_counts()
-                plt.figure(figsize=(10, 6))
-                detection_counts.plot(kind='bar')
-                plt.title(f'Detection Results for {folder}')
-                plt.xlabel('Detected Masks')
-                plt.ylabel('Number of Images')
-                plt.savefig(os.path.join(self.base_output_dir, f'detection_results_{folder}.png'))
-                plt.close()
+            plt.figure(figsize=(15, 6))
+
+            # Grupowanie wyników według folderów i liczenie wykryć oraz niewykryć
+            detection_summary = detection_log_df.groupby(['Folder', 'Detected']).size().unstack(fill_value=0)
+
+            # Tworzenie wykresu słupkowego z dwoma słupkami dla każdego folderu
+            detection_summary.plot(kind='bar', stacked=False)
+            plt.title('Liczba wykrytych i niewykrytych masek w każdym folderze')
+            plt.xlabel('Folder')
+            plt.ylabel('Liczba obrazów')
+            plt.xticks(rotation=45)  # Obrót etykiet osi X dla lepszej czytelności
+
+            # Zapisywanie wykresu
+            plt.savefig(os.path.join(self.base_output_dir, 'detection_results_summary.png'))
+            plt.close()
         else:
             print("No data available for plotting.")
+
 
 # Usage example
 detector = ImageNetImageDetector()

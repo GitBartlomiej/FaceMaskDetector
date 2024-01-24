@@ -7,3 +7,5 @@ imagenet_model = ImageNetImageDetector()
 # yolov8_model.run_detection()
 imagenet_model.run_detection()
 
+
+
